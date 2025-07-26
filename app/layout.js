@@ -5,6 +5,8 @@ import { Toaster } from "sonner";
 import FloatingShapes from "@/components/floating-shapes";
 import Header from "@/components/header";
 import ConvexClientProvider from "@/app/convex-client-provider";
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark, shadesOfPurple } from "@clerk/themes";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -31,27 +33,33 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${outfit.variable} ${plusJakartaSans.variable} ${urbanist.variable} antialiased`}
-      >
-        <ConvexClientProvider>  
-        <ThemeProviderWrapper
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
+    <ClerkProvider
+      appearance={{
+        baseTheme: shadesOfPurple,
+      }}
+    >
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${outfit.variable} ${plusJakartaSans.variable} ${urbanist.variable} antialiased`}
         >
-          {/* Header */}
-          <main className="bg-slate-900 min-h-screen text-white overflow-x-hidden">
-            <Toaster richColors />
-            <FloatingShapes />
-            <Header />
-            {children}
-          </main>
-        </ThemeProviderWrapper>
-        </ConvexClientProvider>
-      </body>
-    </html>
+          <ConvexClientProvider>
+            <ThemeProviderWrapper
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {/* Header */}
+              <main className="bg-slate-900 min-h-screen text-white overflow-x-hidden">
+                <Toaster richColors />
+                <FloatingShapes />
+                <Header />
+                {children}
+              </main>
+            </ThemeProviderWrapper>
+          </ConvexClientProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

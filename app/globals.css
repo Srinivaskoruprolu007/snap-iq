@@ -76,8 +76,17 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --font-sans: var(--font-outfit), var(--font-urbanist), sans-serif;
-  --font-display: var(--font-plus-jakarta-sans), sans-serif;
+
+  --primary: 77 85 204; /* Blue */
+  --secondary: 213 154 222; /* Light Purple */
+  --accent: 229 56 136; /* Pinkish Red */
+  --success: 79 149 157; /* Teal */
+  --warning: 255 187 0;
+  --danger: 234 84 85;
+  --info: 56 132 255;
+  --muted: 114 125 115; /* Muted Green */
+  --background: 20 20 25;
+  --foreground: 255 255 255;
 }
 
 .dark {

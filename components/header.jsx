@@ -1,8 +1,17 @@
 "use client";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Button } from "./ui/button";
+import { PersonIcon, EnterIcon } from "@radix-ui/react-icons";
 
 const Header = () => {
   const pathname = usePathname();
@@ -11,49 +20,58 @@ const Header = () => {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 80, damping: 12 }}
-      className="fixed top-10 left-1/2 -translate-x-1/2 z-50
-                 bg-white/10 backdrop-blur-xl 
-                 border border-white/30
-                 rounded-full px-6 py-3 
-                 shadow-md hover:shadow-xl 
-                 hover:scale-105 transition-all 
-                 duration-300 ease-in-out"
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-3xl"
     >
-      <div className="flex items-center space-x-8 justify-around gap-8">
-        <Link href={"/"} className="flex items-center space-x-2">
-          <Image
-            src="/favicon.png"
-            width={40}
-            height={40}
-            alt="SnapIQ logo"
-            className="rounded-full"
-          />
-        </Link>
-        {pathname === "/" && (
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link
-              href={"/"}
-              className="text-white font-semibold text-lg drop-shadow-[0_1px_3px_rgba(255,255,255,0.4)] hover:scale-110 transition-all duration-300 ease-in-out hover:text-blue-400"
-            >
-              Features
-            </Link>
-            <Link
-              href={"/about"}
-              className="text-white font-semibold text-lg drop-shadow-[0_1px_3px_rgba(255,255,255,0.4)] hover:scale-110 transition-all duration-300 ease-in-out hover:text-blue-400"
-            >
-              Pricing
-            </Link>
-            <Link
-              href={"/contact"}
-              className="text-white font-semibold text-lg drop-shadow-[0_1px_3px_rgba(255,255,255,0.4)] hover:scale-110 transition-all duration-300 ease-in-out hover:text-blue-400"
-            >
-              Contact
-            </Link>
-          </nav>
-        )}
-        <div className="flex items-center justify-between gap-3 md:ml-20">
-            {/* TODO: Add auth */}
-            auth
+      <div className="bg-white/5 backdrop-blur-2xl rounded-full px-3 py-1.5 border border-white/10 shadow-2xl hover:bg-white/10 transition-all duration-300">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="shrink-0">
+            <Image
+              src="/favicon.png"
+              width={70}
+              height={35}
+              alt="SnapIQ logo"
+              className="rounded-full hover:opacity-80 transition-all duration-300"
+            />
+          </Link>
+
+          {pathname === "/" && (
+            <nav className="hidden md:flex items-center gap-10">
+              {["Features", "Pricing", "Contact"].map((item, index) => (
+                <Link
+                  key={index}
+                  href={item === "Features" ? "/" : `/${item.toLowerCase()}`}
+                  className="text-white/80 font-medium text-base hover:text-white transition-all duration-300 relative group"
+                >
+                  <span className="relative z-10">{item}</span>
+                  <span className="absolute inset-x-0 -bottom-1 h-[2px] bg-white/80 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </Link>
+              ))}
+            </nav>
+          )}
+
+          <SignedOut>
+            <div className="flex items-center gap-4">
+              <SignInButton mode="modal">
+                <Button variant="ghost" className="rounded-full flex items-center gap-2">
+                  <EnterIcon className="h-4 w-4" />
+                  Sign In
+                </Button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <Button variant="default" className="rounded-full flex items-center gap-2">
+                  <PersonIcon className="h-4 w-4" />
+                  Sign Up
+                </Button>
+              </SignUpButton>
+            </div>
+          </SignedOut>
+          <SignedIn>
+            <div className="flex items-center gap-4">
+              <Button className="backdrop-blur-xl size-14 rounded-full">
+                <UserButton />
+              </Button>
+            </div>
+          </SignedIn>
         </div>
       </div>
     </motion.header>
