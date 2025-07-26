@@ -51,6 +51,10 @@ const Header = () => {
             </Link>
           </nav>
         )}
+        <div className="flex items-center justify-between gap-3 md:ml-20">
+            {/* TODO: Add auth */}
+            auth
+        </div>
       </div>
     </motion.header>
   );

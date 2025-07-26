@@ -4,6 +4,7 @@ import ThemeProviderWrapper from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import FloatingShapes from "@/components/floating-shapes";
 import Header from "@/components/header";
+import ConvexClientProvider from "@/app/convex-client-provider";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -34,6 +35,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${outfit.variable} ${plusJakartaSans.variable} ${urbanist.variable} antialiased`}
       >
+        <ConvexClientProvider>  
         <ThemeProviderWrapper
           attribute="class"
           defaultTheme="dark"
@@ -48,6 +50,7 @@ export default function RootLayout({ children }) {
             {children}
           </main>
         </ThemeProviderWrapper>
+        </ConvexClientProvider>
       </body>
     </html>
   );
