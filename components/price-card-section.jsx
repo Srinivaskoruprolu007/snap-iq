@@ -41,9 +41,7 @@ const PricingCard = ({
       transition={{ duration: 0.6, delay }}
       viewport={{ once: true, margin: "-50px" }}
       whileHover={{ scale: featured ? 1.05 : 1.03 }}
-      className={`relative h-full ${
-        featured ? "z-10" : "z-0"
-      }`}
+      className={`relative h-full ${featured ? "z-10" : "z-0"}`}
     >
       {featured && (
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -72,9 +70,7 @@ const PricingCard = ({
           </h3>
           <div className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
             ${price}
-            {price > 0 && (
-              <span className="text-lg text-gray-400">/month</span>
-            )}
+            {price > 0 && <span className="text-lg text-gray-400">/month</span>}
           </div>
         </div>
 
@@ -129,7 +125,7 @@ const PricingSection = () => {
         "AI Retouch, Upscaler and more",
       ],
       featured: true,
-      planId: "cplan_2ywZwXjYQQipWYxjCmFZCgCgsTZ",
+      planId: "cplan_30Se5v8VJ49QeyIUf4NHSrG13M0",
       buttonText: "Upgrade to Pro",
     },
     {
@@ -143,13 +139,16 @@ const PricingSection = () => {
         "Commercial license",
         "24/7 priority support",
       ],
-      planId: "cplan_2ywZwXjYQQipWYxjCmFZCgCgsTZ",
+      planId: "cplan_30SeUXRbylsM3ns9VCS5GrTK4SI",
       buttonText: "Get Premium",
     },
   ];
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-slate-900 to-slate-950" id="pricing">
+    <section
+      className="py-20 px-4 bg-gradient-to-b from-slate-900 to-slate-950"
+      id="pricing"
+    >
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
