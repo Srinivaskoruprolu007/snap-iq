@@ -44,7 +44,7 @@ const PricingCard = ({
       className={`relative h-full ${featured ? "z-10" : "z-0"}`}
     >
       {featured && (
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-bold">
             Most Popular
           </div>

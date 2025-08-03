@@ -80,7 +80,7 @@ const Header = () => {
               <Link href="/dashboard">
                 <Button
                   variant="ghost"
-                  className="hidden md:flex items-center justify-center rounded-xl size-10 hover:bg-secondary/30 transition"
+                  className="hidden md:flex items-center justify-center rounded-xl size-10 hover:bg-secondary/30 transition cursor-pointer"
                 >
                   <DashboardIcon className="size-5" />
                 </Button>
