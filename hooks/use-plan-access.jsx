@@ -25,7 +25,7 @@ export const usePlanAccess = () => {
       .filter(([_, hasAccess]) => hasAccess)
       .map(([toolId]) => toolId);
   };
-  const canCreateProject = () => {
+  const canCreateProject = (currentProjectCount) => {
     if (isPro) return true;
     return currentProjectCount < 3; // free limit
   };

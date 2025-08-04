@@ -2,6 +2,8 @@
 
 import { api } from "@/convex/_generated/api";
 import { useConvexQuery } from "@/hooks/use-convex-query";
+import { NewProjectModal } from "@/components/new-project-modal";
+
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import {
@@ -14,26 +16,15 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+
 import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { useUser } from "@clerk/nextjs";
+
 
 const DashboardPage = () => {
   const router = useRouter();
   const { data: projects, isLoading } = useConvexQuery(
     api.projects.getUserProjects
   );
-  const { data: user } = useUser();
-  const currentProjectCount = projects?.length || 0;
-  const isFree = user?.plan === "free";
-
 
   const [showCreateModal, setShowCreateModal] = useState(false);
 
@@ -68,33 +59,10 @@ const DashboardPage = () => {
       </div>
 
       {/* Create Project Modal */}
-      <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              Create New Project
-              {isFree && (
-                <Badge variant="secondary" className="ml-2">
-                  {currentProjectCount} / 3 Projects
-                </Badge>
-              )}
-            </DialogTitle>
-            <DialogDescription>
-              Start a new image editing project. Choose your options below.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <Button
-              variant="primary"
-              className="w-full"
-              onClick={handleCreateProject}
-            >
-              <SparkleIcon className="mr-2" />
-              Start New Project
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <NewProjectModal
+        showCreateModal={showCreateModal}
+        setShowCreateModal={setShowCreateModal}
+      />
 
       {/* Projects Grid */}
       {isLoading ? (
