@@ -4,44 +4,51 @@ import { v } from "convex/values";
 
 export const create = mutation({
   args: {
-    title: v.string(),
+    title: v.optional(v.string()),
     originalImageUrl: v.optional(v.string()),
     thumbnailUrl: v.optional(v.string()),
     canvasState: v.optional(v.any()),
     width: v.optional(v.number()),
     height: v.optional(v.number()),
+    file: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
     const user = await ctx.runQuery(internal.users.getCurrentUser);
     if (user.plan === "free") {
       const projectCount = await ctx.db
         .query("users")
-        .withIndex("by_id", (q) => q.eq("id", user._id))
+        .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", user.tokenIdentifier))
         .collect();
 
-      if (projectCount.length >= 3) {
+      if (projectCount.length > 0 && projectCount[0].projectsUsed >= 3) {
         throw new Error(
           "You have reached the maximum number of projects for your free plan."
         );
       }
     }
-    await ctx.db.insert("projects", {
-      title: args.title,
-      userId: user.id,
+    
+    // Default title if not provided
+    const title = args.title || "Untitled Project";
+    
+    // Create the project
+    const projectId = await ctx.db.insert("projects", {
+      title: title,
+      userId: user._id,
       originalImageUrl: args.originalImageUrl,
       thumbnailUrl: args.thumbnailUrl,
       canvasState: args.canvasState,
-      width: args.width,
-      height: args.height,
+      width: args.width || 800, // Default width
+      height: args.height || 600, // Default height
       createdAt: Date.now(),
       lastActiveAt: Date.now(),
     });
 
-    // update user's project count
-    await ctx.db.patch(user.id, {
-      projectsUsed: projectCount[0].projectsUsed + 1,
+    // Update user's project count
+    await ctx.db.patch(user._id, {
+      projectsUsed: (user.projectsUsed || 0) + 1,
       lastActiveAt: Date.now(),
     });
+    
     return projectId;
   },
 });

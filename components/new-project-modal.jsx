@@ -22,7 +22,7 @@ export const NewProjectModal = ({ showCreateModal, setShowCreateModal }) => {
   const { data: projects, isLoading } = useConvexQuery(
     api.projects.getUserProjects
   );
-  const createProject = useConvexMutation(api.projects.createProject);
+  const createProject = useConvexMutation(api.projects.create);
   const { canCreateProject, isFree } = usePlanAccess();
   const router = useRouter();
   const currentProjectCount = projects?.length || 0;
@@ -48,15 +48,62 @@ export const NewProjectModal = ({ showCreateModal, setShowCreateModal }) => {
       setUploading(true);
       setError(null);
 
-      // Preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-
-      // Create project with file
-      const projectId = await createProject({ file });
+      // Resize and convert image to base64 for storage
+      const imageData = await new Promise((resolve, reject) => {
+        // Create preview first
+        const previewReader = new FileReader();
+        previewReader.onloadend = () => {
+          setPreview(previewReader.result);
+        };
+        previewReader.readAsDataURL(file);
+        
+        // Create a smaller version for storage
+        const img = new Image();
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        img.onload = () => {
+          // Calculate new dimensions (max 1200px width/height)
+          const MAX_SIZE = 1200;
+          let width = img.width;
+          let height = img.height;
+          
+          if (width > height && width > MAX_SIZE) {
+            height = Math.round((height * MAX_SIZE) / width);
+            width = MAX_SIZE;
+          } else if (height > MAX_SIZE) {
+            width = Math.round((width * MAX_SIZE) / height);
+            height = MAX_SIZE;
+          }
+          
+          // Resize image
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convert to base64 with reduced quality
+          const resizedImageData = canvas.toDataURL('image/jpeg', 0.7);
+          resolve(resizedImageData);
+        };
+        
+        img.onerror = reject;
+        
+        // Create a temporary URL for the image
+        const reader = new FileReader();
+        reader.onloadend = () => img.src = reader.result;
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      
+      // Create project with image data
+      const projectId = await createProject({
+        title: file.name.split('.')[0], // Use filename as title
+        originalImageUrl: imageData,
+        thumbnailUrl: imageData,
+        width: 800,
+        height: 600,
+        canvasState: {}
+      });
       setShowCreateModal(false);
       router.push(`/projects/${projectId}`);
     } catch (err) {
